@@ -971,20 +971,27 @@
         /// </summary>
         private void FullRemoteSync()
         {
-            // Test connection
-            if (this.isRemoteConnection || this.logReader.TestConnectionAsync().Result)
-            {
-                // Send any new or edited accounts, records or tickets
-                this.SendPendingEdits();
+            Task.Run(this.logReader.TestConnectionAsync, this.CancelSqlAsync).ContinueWith(
+                task =>
+                {
+                    this.SetRemoteStatus(task.Result);
+                    if (this.IsRemoteConnection)
+                    {
+                        // Send any new or edited accounts, records or tickets
+                        this.SendPendingEdits();
 
-                // Get date range and log for the selected date
-                this.QuickRemoteSync();
+                        // Get date range and log for the selected date
+                        this.QuickRemoteSync();
 
-                // Get account, category, and tech lists
-                this.GetRemoteAccountDetails();
-                this.GetRemoteCategories();
-                this.GetRemoteTechList();
-            }  
+                        // Get account, category, and tech lists
+                        this.GetRemoteAccountDetails();
+                        this.GetRemoteCategories();
+                        this.GetRemoteTechList();
+                    }
+                },
+                this.CancelSqlAsync,
+                TaskContinuationOptions.None,
+                this.SyncContext);  
         }
 
         /// <summary>

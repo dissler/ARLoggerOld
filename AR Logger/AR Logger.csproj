@@ -14,6 +14,22 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>C:\Users\Dan\Desktop\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -39,6 +55,18 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>App.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>93BE67B3EA39EDB6A2267A10FF8F57ECBA80FE5A</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>AR Logger_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GalaSoft.MvvmLight, Version=5.3.0.19026, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
@@ -218,6 +246,7 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="AR Logger_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -249,10 +278,21 @@
   <ItemGroup>
     <Resource Include="App.ico" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="Data\Procedures\sp_GetLogByAccount.sql" />
-    <Content Include="Data\Tables\ARLog_CreateTables.sql" />
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\Procedures\sp_GetLogByAccount.sql" />
+    <None Include="Data\Tables\ARLog_CreateTables.sql" />
     <Resource Include="DevNotes.txt" />
     <Resource Include="Common\Images\CategoryIgnore.png" />
     <Resource Include="Common\Images\CategoryNetwork.png" />
@@ -261,20 +301,20 @@
     <Resource Include="Common\Images\CategoryPos.png" />
     <Resource Include="Common\Images\CategoryProcedural.png" />
     <Resource Include="Common\Images\CategoryUnknown.png" />
-    <Content Include="Data\Procedures\sp_GetAccountDetails.sql" />
-    <Content Include="Data\Procedures\sp_GetCategories.sql" />
-    <Content Include="Data\Procedures\sp_GetDateRange.sql" />
-    <Content Include="Data\Procedures\sp_GetLogByDate.sql" />
-    <Content Include="Data\Procedures\sp_GetTechList.sql" />
-    <Content Include="Data\Procedures\sp_GetTickets.sql" />
-    <Content Include="Data\Procedures\sp_UpsertAccount.sql" />
-    <Content Include="Data\Procedures\sp_UpsertLogByDate.sql" />
-    <Content Include="Data\Procedures\sp_UpsertTicket.sql" />
-    <Content Include="Data\Procedures\usp_ReportCasesPerDay.sql" />
-    <Content Include="Data\Procedures\usp_ReportCategoriesByDate.sql" />
-    <Content Include="Data\Procedures\usp_ReportCurrentWeek.sql" />
-    <Content Include="Data\Procedures\usp_SetCategories.sql" />
-    <Content Include="Data\Procedures\usp_SetZone.sql" />
+    <None Include="Data\Procedures\sp_GetAccountDetails.sql" />
+    <None Include="Data\Procedures\sp_GetCategories.sql" />
+    <None Include="Data\Procedures\sp_GetDateRange.sql" />
+    <None Include="Data\Procedures\sp_GetLogByDate.sql" />
+    <None Include="Data\Procedures\sp_GetTechList.sql" />
+    <None Include="Data\Procedures\sp_GetTickets.sql" />
+    <None Include="Data\Procedures\sp_UpsertAccount.sql" />
+    <None Include="Data\Procedures\sp_UpsertLogByDate.sql" />
+    <None Include="Data\Procedures\sp_UpsertTicket.sql" />
+    <None Include="Data\Procedures\usp_ReportCasesPerDay.sql" />
+    <None Include="Data\Procedures\usp_ReportCategoriesByDate.sql" />
+    <None Include="Data\Procedures\usp_ReportCurrentWeek.sql" />
+    <None Include="Data\Procedures\usp_SetCategories.sql" />
+    <None Include="Data\Procedures\usp_SetZone.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
