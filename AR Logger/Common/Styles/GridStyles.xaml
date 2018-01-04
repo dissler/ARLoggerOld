@@ -1,0 +1,34 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style x:Key="BoundGridStyle" TargetType="{x:Type DataGrid}">
+        <Setter Property="AlternatingRowBackground" Value="Gainsboro"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="CanUserAddRows" Value="False"/>
+        <Setter Property="CanUserDeleteRows" Value="False"/>
+        <Setter Property="GridLinesVisibility" Value="Vertical"/>
+        <Setter Property="Margin" Value="5,1,5,1"/>
+        <Setter Property="RowHeaderStyle" Value="{DynamicResource GridRowHeaderStyle}"/>
+        <Setter Property="RowStyle" Value="{DynamicResource GridRowStyle}"/>
+        <Setter Property="SelectionMode" Value="Single"/>
+        <Setter Property="SelectionUnit" Value="FullRow"/>
+        <Setter Property="VerticalGridLinesBrush" Value="DarkGray"/>
+    </Style>
+
+    <Style x:Key="GridRowStyle" TargetType="{x:Type DataGridRow}">
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="FontWeight" Value="Bold"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="GridRowHeaderStyle" TargetType="{x:Type DataGridRowHeader}">
+        <Setter Property="Foreground" Value="DarkGray"/>
+    </Style>
+
+    <Style x:Key="GridCellNumberStyle" TargetType="{x:Type DataGridCell}">
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+    </Style>
+    
+</ResourceDictionary>

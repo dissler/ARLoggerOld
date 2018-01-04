@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="AR_Logger.Common.Controls.BoundDatePicker"
+                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                        xmlns:local="clr-namespace:AR_Logger.Common.Controls"
+                        mc:Ignorable="d">
+    <StackPanel Orientation="Horizontal">
+        <DatePicker x:Name="DatePicker"
+                    BorderThickness="0"
+                    Margin="5,0"
+                    VerticalAlignment="Center"
+                    Width="95"
+                    SelectedDateChanged="OnSelectedDateChanged"/>
+        <TextBlock x:Name="WeekLabel"
+                   VerticalAlignment="Center"/>
+        <TextBlock x:Name="DayLabel"
+                   Margin="5,0"
+                   FontWeight="Bold" 
+                   VerticalAlignment="Center"/>
+    </StackPanel>
+</UserControl>
+
+
+

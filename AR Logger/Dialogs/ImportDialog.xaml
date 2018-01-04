@@ -1,0 +1,83 @@
+﻿<Window x:Class="AR_Logger.Dialogs.ImportDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:local="clr-namespace:AR_Logger.Dialogs"
+        xmlns:p="clr-namespace:AR_Logger.Properties"
+        xmlns:controls="clr-namespace:AR_Logger.Common.Controls"
+        mc:Ignorable="d" 
+        Style="{StaticResource DefaultWindowStyle}"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        WindowStartupLocation="CenterScreen">
+    <Window.Title>
+        <MultiBinding StringFormat="{}{0} - {1}">
+            <Binding Source="{x:Static p:Resources.WindowTitleMain}"/>
+            <Binding Source="{x:Static p:Resources.WindowTitleImport}"/>
+        </MultiBinding>
+    </Window.Title>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Date picker -->
+            <controls:BoundDatePicker x:Name="DatePicker"
+                                      Grid.Column="0"/>
+            <TextBlock x:Name="FileNameLabel"
+                       Grid.Column="1"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Right"
+                       Margin="5,0"
+                       VerticalAlignment="Center"/>
+        </Grid>
+        
+        <!-- Log viewer -->
+        <controls:BoundDataGrid x:Name="ImportGrid"
+                                Grid.Row="1"
+                                HiddenColumnNames="{Binding ImportHiddenColumnNames, Source={StaticResource Values}}"
+                                ReadOnlyColumnNames="{Binding LogReadOnlyColumnNames, Source={StaticResource Values}}"
+                                StretchColumnName="{Binding LogStretchColumnName, Source={StaticResource Values}}"/>
+        <!-- Buttons -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="SelectAllButton"
+                    Grid.Column="0"
+                    Style="{StaticResource DefaultButtonStyle}"
+                    Content="{x:Static p:Resources.ButtonSelectAll}"
+                    HorizontalAlignment="Right"
+                    IsEnabled="False"
+                    Click="OnSelectAllButtonClick"/>
+            <Button x:Name="SelectNoneButton"
+                    Grid.Column="1"
+                    Style="{StaticResource DefaultButtonStyle}"
+                    Content="{x:Static p:Resources.ButtonSelectNone}"
+                    HorizontalAlignment="Left"
+                    Click="OnSelectNoneButtonClick"/>
+            <Button x:Name="ImportButton"
+                    Grid.Column="2"
+                    Style="{StaticResource DefaultButtonStyle}"
+                    Content="{x:Static p:Resources.ButtonImport}"
+                    HorizontalAlignment="Right"
+                    IsDefault="True"
+                    Click="Submit"/>
+            <Button Grid.Column="3"
+                    Style="{StaticResource DefaultButtonStyle}"
+                    Content="{x:Static p:Resources.ButtonCancel}"
+                    HorizontalAlignment="Left"
+                    IsCancel="True"/>
+        </Grid>
+    </Grid>
+</Window>

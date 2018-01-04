@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="AR_Logger.Common.Controls.AccountDetailsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AR_Logger.Common.Controls"
+             xmlns:core="clr-namespace:AR_Logger.Core"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance core:Main}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Selectable list of accounts -->
+        <ComboBox x:Name="ComboBox"
+                  Grid.Column="0" 
+                  Style="{StaticResource AccountComboStyle}"
+                  DisplayMemberPath="AccountNum"
+                  SelectionChanged="OnSelectionChanged"
+                  Visibility="Collapsed">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel/>
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
+        </ComboBox>
+        
+        <!-- Account number -->
+        <TextBox x:Name="AccountNumLabel"
+                 Grid.Column="0"
+                 Style="{StaticResource DefaultTextBoxStyle}"
+                 FontSize="32" Height="50" IsReadOnly="True"
+                 Margin="5,5,5,1"/>
+        
+        <!-- Account details -->
+        <WrapPanel Grid.Column="1"
+                   Orientation="Horizontal"
+                   VerticalAlignment="Bottom">
+            <TextBox x:Name="AccountStreet"
+                     Style="{StaticResource DefaultTextBoxStyle}"
+                     FontWeight="Bold"
+                     IsReadOnly="True"/>
+            <TextBox x:Name="AccountCity"
+                     Style="{StaticResource DefaultTextBoxStyle}"
+                     FontWeight="Bold"
+                     IsReadOnly="True"/>
+            <TextBox x:Name="AccountState"
+                     Style="{StaticResource DefaultTextBoxStyle}"
+                     FontWeight="Bold"
+                     IsReadOnly="True"/>
+            <TextBox x:Name="AccountZone"
+                     Style="{StaticResource DefaultTextBoxStyle}"
+                     FontWeight="Bold"
+                     IsReadOnly="True"/>
+        </WrapPanel>
+    </Grid>
+</UserControl>

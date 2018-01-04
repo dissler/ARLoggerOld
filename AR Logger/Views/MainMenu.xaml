@@ -1,0 +1,97 @@
+﻿<UserControl x:Class="AR_Logger.Views.MainMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AR_Logger.Views"
+             xmlns:p="clr-namespace:AR_Logger.Properties"
+             mc:Ignorable="d"
+             DataContext="{StaticResource Main}">
+    <Menu VerticalAlignment="Center">
+
+        <!-- File menu -->
+        <MenuItem Header="{x:Static p:Resources.MainMenuFile}"
+                  Style="{StaticResource DefaultMenuStyle}">
+            <MenuItem Header="{x:Static p:Resources.MainMenuImport}"
+                      HeaderStringFormat="{}{0}..."
+                      Icon="{StaticResource IconImport}"
+                      Command="{Binding ImportCommand}"/>
+            <MenuItem Header="{x:Static p:Resources.MainMenuImportWsr}"
+                      Command="{Binding ImportWsrsCommand}"/>
+            <MenuItem Header="{x:Static p:Resources.MainMenuExport}"
+                      Icon="{StaticResource IconExcel}">
+                <MenuItem Header="{x:Static p:Resources.MainMenuExportDay}"
+                          Command="{Binding ExportCommand}"
+                          CommandParameter="{Binding Header, RelativeSource={RelativeSource Self}}"/>
+                <MenuItem Header="{x:Static p:Resources.MainMenuExportWeek}"
+                          Command="{Binding ExportCommand}"
+                          CommandParameter="{Binding Header, RelativeSource={RelativeSource Self}}"/>
+                <MenuItem Header="{x:Static p:Resources.MainMenuExportRange}"
+                          HeaderStringFormat="{}{0}..."
+                          Command="{Binding ExportCommand}"
+                          CommandParameter="{Binding Header, RelativeSource={RelativeSource Self}}"/>
+            </MenuItem>
+            <Separator/>
+            <MenuItem Header="{x:Static p:Resources.MainMenuExit}"
+                      Icon="{StaticResource IconClose}"
+                      Command="{Binding ExitAppCommand}"/>
+        </MenuItem>
+
+        <!-- Edit menu -->
+        <MenuItem Header="{x:Static p:Resources.MainMenuEdit}"
+                  Style="{StaticResource DefaultMenuStyle}">
+            <MenuItem Command="ApplicationCommands.Cut" Icon="{StaticResource IconCut}"/>
+            <MenuItem Command="ApplicationCommands.Copy" Icon="{StaticResource IconCopy}"/>
+            <MenuItem Command="ApplicationCommands.Paste" Icon="{StaticResource IconPaste}"/>
+        </MenuItem>
+
+        <!-- View menu -->
+        <MenuItem Header="{x:Static p:Resources.MainMenuView}"
+                  Style="{StaticResource DefaultMenuStyle}"
+                  ItemContainerStyle="{StaticResource BoundMenuStyle}">
+            <MenuItem.ItemsSource>
+            <CompositeCollection>
+                <CollectionContainer Collection="{Binding ViewMenus, Source={StaticResource Main}}"/>
+                <Separator/>
+                <MenuItem Header="{x:Static p:Resources.MainMenuClearFilters}"
+                          Command="{Binding ClearFiltersCommand}"/>
+            </CompositeCollection>
+        </MenuItem.ItemsSource>
+        </MenuItem>
+
+        <!-- Tools menu -->
+        <MenuItem Header="{x:Static p:Resources.MainMenuTools}"
+                  Style="{StaticResource DefaultMenuStyle}">
+            <MenuItem Header="{x:Static p:Resources.MainMenuAssign}"
+                      HeaderStringFormat="{}{0}..."
+                      Icon="{StaticResource IconUsers}"
+                      Command="{Binding AssignCasesCommand}"
+                      IsEnabled="{Binding AreUnassignedCases}"/>
+            <MenuItem Header="{x:Static p:Resources.MainMenuTicket}"
+                      HeaderStringFormat="{}{0}..."
+                      Command="{Binding TicketCommand}"/>
+        </MenuItem>
+
+        <!-- Window menu -->
+        <MenuItem Header="{x:Static p:Resources.MainMenuWindow}">
+            <MenuItem Header="{x:Static p:Resources.MainMenuAccountDetail}"
+                      Icon="{StaticResource IconLog}"
+                      Command="{Binding AccountCommand}"
+                      IsEnabled="{Binding IsRemoteConnection}"/>
+            <MenuItem Header="{x:Static p:Resources.MainMenuAccountManager}"
+                      Command="{Binding AccountManagerCommand}"
+                      IsEnabled="False"/>
+            <Separator/>
+            <MenuItem Header="{x:Static p:Resources.MainMenuLibrary}"
+                      Icon="{StaticResource IconLibrary}"
+                      Command="{Binding LibraryCommand}"
+                      IsEnabled="False"/>
+        </MenuItem>
+
+        <!-- Help menu -->
+        <MenuItem Header="{x:Static p:Resources.MainMenuHelp}">
+            <MenuItem Header="{x:Static p:Resources.MainMenuAbout}"
+                      Command="{Binding AboutCommand}"/>
+        </MenuItem>
+    </Menu>
+</UserControl>

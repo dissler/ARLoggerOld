@@ -1,0 +1,118 @@
+﻿<Window x:Class="AR_Logger.Dialogs.AdjustDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AR_Logger.Dialogs"
+        xmlns:p="clr-namespace:AR_Logger.Properties"
+        xmlns:controls="clr-namespace:AR_Logger.Common.Controls"
+        mc:Ignorable="d"
+        Style="{StaticResource DefaultDialogStyle}">
+    <Window.Title>
+        <MultiBinding StringFormat="{}{0} - {1}">
+            <Binding Source="{x:Static p:Resources.WindowTitleMain}"/>
+            <Binding Source="{x:Static p:Resources.WindowTitleAdjust}"/>
+        </MultiBinding>
+    </Window.Title>
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Account details -->
+        <controls:AccountDetailsControl x:Name="AccountDetailsControl"
+                                        Grid.Row="0" Grid.ColumnSpan="2"
+                                        IsReadOnly="True"/>
+        
+        <!-- Selected date -->
+        <TextBlock x:Name="DateLabel"
+                   Grid.Row="1" Grid.Column="0"
+                   Style="{StaticResource DefaultLabelStyle}"
+                   FontWeight="Bold"
+                   VerticalAlignment="Bottom"/>
+        
+        <!-- Imbalance amount -->
+        <TextBlock Grid.Row="1" Grid.Column="1"
+                   Style="{StaticResource DefaultLabelStyle}"
+                   Text="{x:Static p:Resources.LabelAdjustImbalance}"
+                   FontWeight="Bold"
+                   VerticalAlignment="Bottom"/>
+        <TextBox x:Name="ImbalanceAmount"
+                 Grid.Row="2" Grid.Column="1" 
+                 Style="{StaticResource DefaultTextBoxStyle}"
+                 Margin="5,0"
+                 TextAlignment="Center"
+                 PreviewTextInput="EnforceNumericInput"
+                 TextChanged="ProcessTextInput"/>
+        
+        <!-- Transaction number -->
+        <TextBlock Grid.Row="3" Grid.Column="0"
+                   Style="{StaticResource DefaultLabelStyle}"
+                   Text="{x:Static p:Resources.LabelAdjustTrans}"
+                   FontWeight="Bold"/>
+        <TextBox x:Name="TransactionId"
+                 Grid.Row="4" Grid.Column="0"
+                 Style="{StaticResource DefaultTextBoxStyle}"
+                 Margin="5,0"
+                 PreviewTextInput="EnforceNumericInput"
+                 TextChanged="ProcessTextInput"/>
+        
+        <!-- Old amount -->
+        <TextBlock Grid.Row="3" Grid.Column="1"
+                   Style="{StaticResource DefaultLabelStyle}"
+                   Text="{x:Static p:Resources.LabelAdjustOld}"
+                   FontWeight="Bold"/>
+        <TextBox x:Name="OldAmount"
+                 Grid.Row="4" Grid.Column="1"
+                 Style="{StaticResource DefaultTextBoxStyle}"
+                 Margin="5,0"
+                 PreviewTextInput="EnforceNumericInput"
+                 TextChanged="ProcessTextInput"/>
+        
+        <!-- New amount -->
+        <TextBlock Grid.Row="5" Grid.Column="1"
+                   Style="{StaticResource DefaultLabelStyle}"
+                   Text="{x:Static p:Resources.LabelAdjustNew}"
+                   FontWeight="Bold"/>
+        <TextBox x:Name="NewAmount"
+                 Grid.Row="6" Grid.Column="1"
+                 Style="{StaticResource DefaultTextBoxStyle}"
+                 IsReadOnly="True"
+                 Margin="5,0"/>
+        
+        <!-- Error message -->
+        <TextBlock x:Name="ErrorLabel"
+                   Grid.Row="5" Grid.Column="0" Grid.RowSpan="2"
+                   Style="{StaticResource DefaultLabelStyle}"
+                   Text="{x:Static p:Resources.LabelAdjustTransDateError}"
+                   Foreground="DarkRed"
+                   Margin="5,0,5,0"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   Visibility="Collapsed"/>
+        
+        <!-- Buttons -->
+        <Button x:Name="SubmitButton"
+                Grid.Row="7" Grid.Column="0"
+                Style="{StaticResource DefaultButtonStyle}" 
+                Content="{x:Static p:Resources.ButtonOK}"
+                IsDefault="True"
+                IsEnabled="False"
+                Click="Submit"/>
+        <Button Grid.Row="7" Grid.Column="1"
+                Style="{StaticResource DefaultButtonStyle}"
+                Content="{x:Static p:Resources.ButtonCancel}"
+                IsCancel="True"/>
+    </Grid>
+</Window>

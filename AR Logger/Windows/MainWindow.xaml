@@ -1,0 +1,123 @@
+﻿<Window x:Class="AR_Logger.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AR_Logger"
+        xmlns:views="clr-namespace:AR_Logger.Views"
+        xmlns:controls="clr-namespace:AR_Logger.Common.Controls"
+        xmlns:p="clr-namespace:AR_Logger.Properties"
+        mc:Ignorable="d"
+        DataContext="{Binding Source={StaticResource Main}}"
+        Style="{StaticResource DefaultWindowStyle}"
+        Title="{x:Static p:Resources.WindowTitleMain}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="33"/>
+        </Grid.RowDefinitions>
+
+        <!-- Main Menu -->
+        <views:MainMenu Grid.Row="0"/>
+
+        <!-- Toolbar -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Date Picker -->
+            <controls:BoundDatePicker Grid.Column="0"
+                                      FirstDate="{Binding FirstLogDate}"
+                                      LastDate="{Binding LastLogDate}"
+                                      SelectedDate="{Binding SelectedLogDate, Mode=TwoWay, 
+                UpdateSourceTrigger=PropertyChanged}"/>
+
+            <!-- Applied view filter -->
+            <TextBlock Grid.Column="1"
+                       Style="{StaticResource DefaultLabelStyle}"
+                       HorizontalAlignment="Left" Margin="10,0,0,0"
+                       Text="{Binding ViewFilterDescription}"
+                       FontStyle="Italic"/>
+
+            <!-- User -->
+            <Image Grid.Column="2"
+                   Style="{StaticResource DefaultImageStyle}"
+                   Source="{StaticResource ImageUser}"/>
+            <TextBlock Grid.Column="3"
+                       Style="{StaticResource DefaultLabelStyle}"
+                       FontWeight="Bold" Margin="3,0,7,0"
+                       Text="{Binding UserInitials}"/>
+        </Grid>
+
+        <!-- Display Grid -->
+        <controls:BoundDataGrid Grid.Row="2"
+                                DisplayView="{Binding LocalLogView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                GridContextMenu="{Binding LogContextMenu}"
+                                HiddenColumnNames="{Binding LogHiddenColumnNames, Source={StaticResource Values}}"
+                                MouseDoubleClickCommand="{Binding AccountCommand}"
+                                ReadOnlyColumnNames="{Binding LogReadOnlyColumnNames, Source={StaticResource Values}}"
+                                SelectedRow="{Binding SelectedLogView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                StretchColumnName="{Binding LogStretchColumnName, Source={StaticResource Values}}"/>
+
+        <!-- Status Bar -->
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Connection icons -->
+            <Image Grid.Column="0"
+                   Style="{StaticResource DefaultImageStyle}"
+                   Margin="5,0,5,0"
+                   Source="{StaticResource ImageOnline}"
+                   ToolTip="{Binding RemoteLogName}"
+                   Visibility="{Binding IsRemoteConnection, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+            <Image Grid.Column="0"
+                   Style="{StaticResource DefaultImageStyle}"
+                   Margin="5,0,5,0"
+                   Source="{StaticResource ImageOffline}"
+                   ToolTip="{x:Static p:Resources.AlertDisconnected}"
+                   Visibility="{Binding IsRemoteConnection, Converter={StaticResource NegatedBooleanToVisibilityConverter}}"/>
+
+            <!-- Status messages -->
+            <TextBox Grid.Column="1" 
+                     Style="{StaticResource StatusTextStyle}"
+                     Text="{Binding StatusTimeStamp}"/>
+            <TextBox Grid.Column="2" 
+                     Style="{StaticResource StatusTextStyle}"
+                     Text="{Binding StatusText}"
+                     ToolTip="{Binding StatusText}"/>
+
+            <!-- Progress bar -->
+            <ProgressBar Grid.Column="3"
+                         Style="{StaticResource DefaultProgressBarStyle}"
+                         Value="{Binding Progress}"
+                         Visibility="{Binding ShowProgress, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+            <!-- Cancel button -->
+            <Button Grid.Column="4"
+                    Style="{StaticResource DefaultButtonStyle}"
+                    Content="{x:Static p:Resources.ButtonCancel}"
+                    Command="{Binding CancelButtonCommand}"
+                    Visibility="{Binding ShowProgress, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+            <!-- Sync button -->
+            <Button Grid.Column="5"
+                    Style="{StaticResource DefaultButtonStyle}"
+                    Content="{x:Static p:Resources.ButtonSync}"
+                    Command="{Binding SyncButtonCommand}"/>
+        </Grid>
+    </Grid>
+</Window>

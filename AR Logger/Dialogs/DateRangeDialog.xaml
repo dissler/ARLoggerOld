@@ -1,0 +1,56 @@
+﻿<Window x:Class="AR_Logger.Dialogs.DateRangeDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AR_Logger.Dialogs"
+        xmlns:p="clr-namespace:AR_Logger.Properties"
+        xmlns:controls="clr-namespace:AR_Logger.Common.Controls"
+        mc:Ignorable="d"
+        Style="{StaticResource DefaultDialogStyle}"
+        Title="{x:Static p:Resources.WindowTitleDateRange}">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0"
+              HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0"
+                       Style="{StaticResource DefaultLabelStyle}"
+                       FontWeight="Bold"
+                       Text="{x:Static p:Resources.LabelFirstDate}"/>
+            <controls:BoundDatePicker x:Name="FirstDatePicker"
+                                      Grid.Row="0" Grid.Column="1"/>
+            <TextBlock Grid.Row="1" Grid.Column="0"
+                       Style="{StaticResource DefaultLabelStyle}"
+                       FontWeight="Bold"
+                       Text="{x:Static p:Resources.LabelLastDate}"/>
+            <controls:BoundDatePicker x:Name="LastDatePicker"
+                                      Grid.Row="1" Grid.Column="1"/>
+        </Grid>
+        
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"
+                    Style="{StaticResource DefaultButtonStyle}"
+                    Content="{x:Static p:Resources.ButtonOK}"
+                    IsDefault="True"
+                    Click="Submit"/>
+            <Button Grid.Column="1" Style="{StaticResource DefaultButtonStyle}"
+                    Content="{x:Static p:Resources.ButtonCancel}"
+                    IsCancel="True"/>
+        </Grid>
+    </Grid>
+</Window>

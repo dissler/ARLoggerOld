@@ -1,0 +1,56 @@
+﻿<Window x:Class="AR_Logger.Windows.AccountHistoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AR_Logger.Windows"
+        xmlns:p="clr-namespace:AR_Logger.Properties"
+        xmlns:controls="clr-namespace:AR_Logger.Common.Controls"
+        xmlns:core="clr-namespace:AR_Logger.Core"
+        mc:Ignorable="d"
+        Style="{StaticResource DefaultWindowStyle}"
+        d:DataContext="{d:DesignInstance core:Main}">
+    <Window.Title>
+        <MultiBinding StringFormat="{}{0} - {1}">
+            <Binding Source="{x:Static p:Resources.WindowTitleMain}"/>
+            <Binding Source="{x:Static p:Resources.WindowTitleAccountHistory}"/>
+        </MultiBinding>
+    </Window.Title>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="2"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Account details -->
+        <controls:AccountDetailsControl Grid.Row="0"
+                                        Accounts="{Binding AccountsView}"
+                                        IsReadOnly="False"
+                                        SelectedAccount="{Binding SelectedAccountRow, Mode=TwoWay,
+            UpdateSourceTrigger=PropertyChanged}"/>
+        
+        <!-- Case history -->
+        <controls:BoundDataGrid Grid.Row="1"
+                                DisplayView="{Binding AccountLogView}"
+                                HiddenColumnNames="{Binding AccountHiddenColumnNames, Source={StaticResource Values}}"
+                                IsReadOnly="True"
+                                MouseDoubleClickCommand="{Binding GoToRecordCommand}"
+                                SelectedRow="{Binding SelectedAccountLogView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                StretchColumnName="{Binding LogStretchColumnName, Source={StaticResource Values}}"/>
+        <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch"/>
+        
+        <!-- Ticket history -->
+        <controls:BoundDataGrid Grid.Row="3"
+                                DisplayView="{Binding TicketView}"
+                                HiddenColumnNames="{Binding TicketHiddenColumnNames, Source={StaticResource Values}}"
+                                StretchColumnName="{Binding TicketStretchColumnName, Source={StaticResource Values}}"/>
+        <Button Grid.Row="4" 
+                Style="{StaticResource DefaultButtonStyle}"
+                HorizontalAlignment="Left"
+                Content="{x:Static p:Resources.ButtonNewTicket}"
+                Command="{Binding NewTicketCommand}"/>
+    </Grid>
+</Window>

@@ -1,0 +1,9 @@
+﻿
+01-03-18
+
+Needs Implementing:
+* cancellable async operations
+* Account Manager window
+* edit account details in AccountDetailsControl
+* Script Library
+* Transaction Generator

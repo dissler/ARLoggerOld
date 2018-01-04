@@ -1,0 +1,37 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Icon by www.iconarchive.com/artist/rade8.html -->
+    <BitmapImage x:Key="ApplicationIcon" UriSource="../../App.ico"/>
+
+    <BitmapImage x:Key="ImageHdog" UriSource="Hdog.png"/>
+    <BitmapImage x:Key="ImageMoney" UriSource="Money.png"/>
+    <BitmapImage x:Key="ImageOffline" UriSource="Offline.png"/>
+    <BitmapImage x:Key="ImageOnline" UriSource="Online.png"/>
+    <BitmapImage x:Key="ImageUser" UriSource="User.png"/>
+
+    <!-- Menu images -->
+    <Image x:Key="IconClose" Source="Close.png"/>
+    <Image x:Key="IconCut" Source="Cut.png"/>
+    <Image x:Key="IconCopy" Source="Copy.png"/>
+    <Image x:Key="IconExcel" Source="ExportExcel.png"/>
+    <Image x:Key="IconGenTrans" Source="GenTrans.png"/>
+    <Image x:Key="IconImport" Source="ImportFile.png"/>
+    <Image x:Key="IconLibrary" Source="Library.png"/>
+    <Image x:Key="IconLog" Source="Log.png"/>
+    <Image x:Key="IconMoney" Source="Money.png"/>
+    <Image x:Key="IconOptions" Source="Settings.png"/>
+    <Image x:Key="IconPaste" Source="Paste.png"/>
+    <Image x:Key="IconUsers" Source="Users.png"/>
+    <Image x:Key="IconUser" Source="User.png"/>
+    
+    <!-- Record category image sources -->
+    <BitmapImage x:Key="CategoryImageIgnore" UriSource="CategoryIgnore.png"/>
+    <BitmapImage x:Key="CategoryImageNetwork" UriSource="CategoryNetwork.png"/>
+    <BitmapImage x:Key="CategoryImageOt" UriSource="CategoryOt.png"/>
+    <BitmapImage x:Key="CategoryImageOther" UriSource="CategoryOtherSoftware.png"/>
+    <BitmapImage x:Key="CategoryImagePos" UriSource="CategoryPos.png"/>
+    <BitmapImage x:Key="CategoryImageProcedural" UriSource="CategoryProcedural.png"/>
+    <BitmapImage x:Key="CategoryImageUnknown" UriSource="CategoryUnknown.png"/>
+
+</ResourceDictionary>

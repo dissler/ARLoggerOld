@@ -1,0 +1,43 @@
+﻿<Application x:Class="AR_Logger.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:local="clr-namespace:AR_Logger"
+             xmlns:core="clr-namespace:AR_Logger.Core"
+             xmlns:common="clr-namespace:AR_Logger.Common"
+             xmlns:converters="clr-namespace:AR_Logger.Common.Converters"
+             StartupUri="Windows/MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            
+            <!-- Shared Resources -->
+            <core:Main x:Key="Main" x:Shared="True"/>
+            <common:Values x:Key="Values" x:Shared="True"/>
+            
+            <!-- Converters -->
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <converters:AreObjectsSameMultiConverter x:Key="AreObjectsSameMultiConverter"/>
+            <converters:AreObjectsDifferentMultiConverter x:Key="AreObjectsDifferentMultiConverter"/>
+            <converters:BooleanToEnabledMultiConverter x:Key="BooleanToEnabledMultiConverter"/>
+            <converters:DebugConverter x:Key="DebugConverter"/>
+            <converters:ItemCountToEnabledConverter x:Key="ItemCountToEnabledConverter"/>
+            <converters:ItemCountToVisibilityConverter x:Key="ItemCountToVisibilityConverter"/>
+            <converters:NegatedBooleanToEnabledConverter x:Key="NegatedBooleanToEnabledConverter"/>
+            <converters:NegatedBooleanToVisibilityConverter x:Key="NegatedBooleanToVisibilityConverter"/>
+            <converters:ObjectToEnabledConverter x:Key="ObjectToEnabledConverter"/>
+            <converters:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter"/>
+            
+            <converters:CategoryIdToDescriptionConverter x:Key="CategoryIdToDescriptionConverter"/>
+            <converters:CategoryIdToImageConverter x:Key="CategoryIdToImageConverter"/>
+            
+            <!-- Merged resources -->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Common/Images/Images.xaml"/>
+                <ResourceDictionary Source="Common/Styles/DefaultStyles.xaml"/>
+                <ResourceDictionary Source="Common/Styles/GridStyles.xaml"/>
+                <ResourceDictionary Source="Common/Styles/SpecializedStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
+    
+    

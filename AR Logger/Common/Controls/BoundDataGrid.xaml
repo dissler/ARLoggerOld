@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="AR_Logger.Common.Controls.BoundDataGrid"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AR_Logger.Views"
+             mc:Ignorable="d">
+    
+    <!-- It would be great if setting the user control's data context to self and not have to -->
+    <!-- specify the binding sources explicitly for each part of the data grid, but WPF!  vOv -->
+    <DataGrid x:Name="DataGrid"
+              Style="{StaticResource BoundGridStyle}"
+              ItemsSource="{Binding DisplayView, Mode=TwoWay,
+        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+              LoadingRow="OnLoadingRow"
+              SelectionChanged="OnDataGridSelectionChanged">
+        <DataGrid.InputBindings>
+            <MouseBinding MouseAction="LeftDoubleClick"
+                          Command="{Binding MouseDoubleClickCommand,
+        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"/>
+        </DataGrid.InputBindings>
+        <DataGrid.ContextMenu>
+            <ContextMenu ItemsSource="{Binding GridContextMenu,
+        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                         ItemContainerStyle="{StaticResource BoundMenuStyle}"
+                         Visibility="{Binding Items.Count, RelativeSource={RelativeSource Self},
+                Converter={StaticResource ItemCountToVisibilityConverter}}"/>
+        </DataGrid.ContextMenu>
+    </DataGrid>
+</UserControl>
