@@ -5,6 +5,7 @@
     using System.Data;
     using System.Data.SqlClient;
     using System.Diagnostics;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using AR_Logger.Common;
@@ -45,7 +46,7 @@
         {
             // Initialize fields
             this.connectionString = Debugger.IsAttached
-                ? Settings.Default.ARLog2ConnectionString
+                ? Settings.Default.ARLogDevConnectionString
                 : Settings.Default.ARLogConnectionString;
         }
 

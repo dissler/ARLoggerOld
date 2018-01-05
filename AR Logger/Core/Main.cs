@@ -134,8 +134,6 @@
         {
             // Initialize components
             this.adjustDialogLocation = new Point(100, 100);
-            this.logReader = new LogReader();
-            this.logReader.PropertyChanged += this.OnLogReaderPropertyChanged;
             this.offlineEditAccounts = new List<int>();
             this.offlineEditRecords = new List<int>();
             this.offlineEditTickets = new List<int>();
@@ -193,6 +191,8 @@
             this.PropertyChanged += this.OnPropertyChanged;
 
             // Test remote connection
+            this.logReader = new LogReader();
+            this.logReader.PropertyChanged += this.OnLogReaderPropertyChanged;
             this.logReader.TestConnectionAsync();
         }
 
@@ -971,27 +971,23 @@
         /// </summary>
         private void FullRemoteSync()
         {
-            Task.Run(this.logReader.TestConnectionAsync, this.CancelSqlAsync).ContinueWith(
-                task =>
-                {
-                    this.SetRemoteStatus(task.Result);
-                    if (this.IsRemoteConnection)
-                    {
-                        // Send any new or edited accounts, records or tickets
-                        this.SendPendingEdits();
+            if (this.IsRemoteConnection)
+            {
+                // Send any new or edited accounts, records or tickets
+                this.SendPendingEdits();
 
-                        // Get date range and log for the selected date
-                        this.QuickRemoteSync();
+                // Get date range and log for the selected date
+                this.QuickRemoteSync();
 
-                        // Get account, category, and tech lists
-                        this.GetRemoteAccountDetails();
-                        this.GetRemoteCategories();
-                        this.GetRemoteTechList();
-                    }
-                },
-                this.CancelSqlAsync,
-                TaskContinuationOptions.None,
-                this.SyncContext);  
+                // Get account, category, and tech lists
+                this.GetRemoteAccountDetails();
+                this.GetRemoteCategories();
+                this.GetRemoteTechList();
+            }
+            else
+            {
+                this.logReader.TestConnectionAsync();
+            }
         }
 
         /// <summary>
@@ -1010,25 +1006,16 @@
         {
             if (this.IsRemoteConnection)
             {
-                Task.Run(this.logReader.GetAccountDetailsAsync, this.CancelSqlAsync).ContinueWith(
-                    task => 
-                    {
-                        if (task.Result.Count() > 0)
-                        {
-                            this.suspendRemoteSync = true;
-                            this.AccountsTable.Rows.Clear();
-                            var accountDetails = task.Result.Rows.OfType<LogRow>();
-                            foreach (var row in accountDetails)
-                            {
-                                this.AccountsTable.ImportRow(row);
-                            }
+                this.suspendRemoteSync = true;
 
-                            this.suspendRemoteSync = false;
-                        }
-                    },
-                    this.CancelSqlAsync,
-                    TaskContinuationOptions.None,
-                    this.SyncContext);
+                var accountDetails = this.logReader.GetAccountDetailsAsync().Result;
+                this.AccountsTable.Rows.Clear();
+                foreach (var row in accountDetails.Rows.OfType<LogRow>())
+                {
+                    this.AccountsTable.ImportRow(row);
+                }
+                
+                this.suspendRemoteSync = false;
             }
         }
 
@@ -1039,73 +1026,61 @@
         {
             if (this.IsRemoteConnection)
             {
-                Task.Run(this.logReader.GetCategoriesAsync, this.CancelSqlAsync).ContinueWith(
-                    task =>
+                var categories = this.logReader.GetCategoriesAsync().Result.Rows.OfType<DataRow>().ToList();
+                var groups = categories.Select(row => row[2].ToString()).Distinct().OrderBy(row => row).ToList();
+
+                // Add each submenu rather than generating new collection so that property changes are triggered
+                this.CategoryMenu.Children.Clear();
+                foreach (var group in groups)
+                {
+                    var groupMenu = new BoundMenuItem(group);
+                    if (Values.CategoryMenuIcons.ContainsKey(group))
                     {
-                        // Returns category id, description, group
-                        var categories = task.Result.Rows.OfType<DataRow>().ToList();
-                        var groups = categories.Select(row => row[2].ToString()).Distinct().OrderBy(row => row).ToList();
+                        groupMenu.Icon = new Image { Source = Values.CategoryMenuIcons[group] };
+                    }
 
-                        // Make sure we're in the UI thread
-                        Application.Current.Dispatcher.Invoke(() =>
+                    foreach (var match in categories.Where(row => row[2].ToString() == group))
+                    {
+                        // Add category id to dictionary for description and image lookup
+                        var categoryId = Convert.ToInt32(match[0]);
+                        var categoryDesc = match[1].ToString();
+                        if (!Values.CategoryDescriptions.ContainsKey(categoryId))
                         {
-                            // Add each submenu rather than generating new collection so that property changes are triggered
-                            this.CategoryMenu.Children.Clear();
-                            foreach (var group in groups)
-                            {
-                                var groupMenu = new BoundMenuItem(group);
-                                if (Values.CategoryMenuIcons.ContainsKey(group))
-                                {
-                                    groupMenu.Icon = new Image { Source = Values.CategoryMenuIcons[group] };
-                                }
+                            Values.CategoryDescriptions.Add(categoryId, categoryDesc);
+                        }
 
-                                foreach (var match in categories.Where(row => row[2].ToString() == group))
-                                {
-                                    // Add category id to dictionary for description and image lookup
-                                    var categoryId = Convert.ToInt32(match[0]);
-                                    var categoryDesc = match[1].ToString();
-                                    if (!Values.CategoryDescriptions.ContainsKey(categoryId))
-                                    {
-                                        Values.CategoryDescriptions.Add(categoryId, categoryDesc);
-                                    }
+                        if (!Values.CategoryMenuIcons.ContainsKey(categoryId.ToString()))
+                        {
+                            Values.CategoryMenuIcons.Add(categoryId.ToString(), Values.CategoryMenuIcons[group]);
+                        }
 
-                                    if (!Values.CategoryMenuIcons.ContainsKey(categoryId.ToString()))
-                                    {
-                                        Values.CategoryMenuIcons.Add(categoryId.ToString(), Values.CategoryMenuIcons[group]);
-                                    }
-
-                                    groupMenu.Children.Add(new BoundMenuItem(categoryDesc)
-                                    {
-                                        Command = new RelayCommand<string>(this.SetRecordCategory),
-                                        Parameter = categoryId.ToString()
-                                    });
-                                }
-
-                                this.CategoryMenu.Children.Add(groupMenu);
-                            }
-
-                            this.CategoryMenu.Children.Add(new Separator());
-                            var allCategories = new BoundMenuItem("All");
-                            foreach (var category in categories)
-                            {
-                                allCategories.Children.Add(new BoundMenuItem(category[1].ToString())
-                                {
-                                    Command = new RelayCommand<string>(this.SetRecordCategory),
-                                    Parameter = category[0].ToString()
-                                });
-                            }
-
-                            this.CategoryMenu.Children.Add(allCategories);
-                            this.CategoryMenu.Children.Add(new BoundMenuItem("None")
-                            {
-                                Command = new RelayCommand<string>(this.SetRecordCategory),
-                                Parameter = "0"
-                            });
+                        groupMenu.Children.Add(new BoundMenuItem(categoryDesc)
+                        {
+                            Command = new RelayCommand<string>(this.SetRecordCategory),
+                            Parameter = categoryId.ToString()
                         });
-                    },
-                    this.CancelSqlAsync,
-                    TaskContinuationOptions.None,
-                    this.SyncContext);
+                    }
+
+                    this.CategoryMenu.Children.Add(groupMenu);
+                }
+
+                this.CategoryMenu.Children.Add(new Separator());
+                var allCategories = new BoundMenuItem("All");
+                foreach (var category in categories)
+                {
+                    allCategories.Children.Add(new BoundMenuItem(category[1].ToString())
+                    {
+                        Command = new RelayCommand<string>(this.SetRecordCategory),
+                        Parameter = category[0].ToString()
+                    });
+                }
+
+                this.CategoryMenu.Children.Add(allCategories);
+                this.CategoryMenu.Children.Add(new BoundMenuItem("None")
+                {
+                    Command = new RelayCommand<string>(this.SetRecordCategory),
+                    Parameter = "0"
+                });
             }
         }
 
@@ -1116,33 +1091,27 @@
         {
             if (this.IsRemoteConnection)
             {
-                Task.Run(this.logReader.GetDateRangeAsync, this.CancelSqlAsync).ContinueWith(
-                task => 
+                var dateQuery = this.logReader.GetDateRangeAsync().Result;
+                if (dateQuery.Rows.Count > 0)
                 {
-                    if (task.Result.Rows.Count > 0)
-                    {
-                        var range = task.Result.Rows.OfType<DataRow>().First();
-                        var firstDate = (DateTime)range[0];
-                        var lastDate = (DateTime)range[1];
+                    var range = dateQuery.Rows.OfType<DataRow>().First();
+                    var firstDate = (DateTime)range[0];
+                    var lastDate = (DateTime)range[1];
 
-                        // If local log table has rows, set date range to widest available
-                        this.FirstLogDate = this.LocalLog.Count() > 0
-                            ? new[] { firstDate, (DateTime)this.LocalLog.FirstDate }.Min()
-                            : firstDate;
-                        this.LastLogDate = this.LocalLog.Count() > 0
-                            ? new[] { lastDate, (DateTime)this.LocalLog.LastDate }.Max()
-                            : lastDate;
-                        Tools.DebugLog($"Got date range {this.FirstLogDate:d} - {this.LastLogDate:d}.");
-                    }
-                    else
-                    {
-                        this.FirstLogDate = this.LocalLog.FirstDate;
-                        this.LastLogDate = this.LocalLog.LastDate;
-                    }
-                },
-                this.CancelSqlAsync,
-                TaskContinuationOptions.None,
-                this.SyncContext);
+                    // If local log table has rows, set date range to widest available
+                    this.FirstLogDate = this.LocalLog.Count() > 0
+                        ? new[] { firstDate, (DateTime)this.LocalLog.FirstDate }.Min()
+                        : firstDate;
+                    this.LastLogDate = this.LocalLog.Count() > 0
+                        ? new[] { lastDate, (DateTime)this.LocalLog.LastDate }.Max()
+                        : lastDate;
+                    Tools.DebugLog($"Got date range {this.FirstLogDate:d} - {this.LastLogDate:d}.");
+                }
+                else
+                {
+                    this.FirstLogDate = this.LocalLog.FirstDate;
+                    this.LastLogDate = this.LocalLog.LastDate;
+                }
             }
         }
 
@@ -1154,13 +1123,8 @@
         {
             if (this.IsRemoteConnection && this.SelectedAccountRow?.AccountId != null)
             {
-                Task.Run(
-                    () => this.logReader.GetLogByAccountAsync(accountId ?? this.SelectedAccountRow.AccountId),
-                    this.CancelSqlAsync).ContinueWith(
-                    task => { this.ImportRemoteLogByDate(task.Result); },
-                    this.CancelSqlAsync,
-                    TaskContinuationOptions.None,
-                    this.SyncContext);
+                this.ImportRemoteLogByDate(
+                    this.logReader.GetLogByAccountAsync(accountId ?? this.SelectedAccountRow.AccountId).Result);
             }
         }
 
@@ -1173,17 +1137,7 @@
         {
             if (this.IsRemoteConnection)
             {
-                Task.Run(
-                    () => this.logReader.GetLogByDateAsync(firstDate ?? this.SelectedLogDate, lastDate),
-                    this.CancelSqlAsync).ContinueWith(
-                    task =>
-                    {
-                        this.SetStatusText(this.logReader.IsConnected ? "Log up to date." : "Could not connect to remote log.");
-                        this.ImportRemoteLogByDate(task.Result);
-                    },
-                    this.CancelSqlAsync,
-                    TaskContinuationOptions.None,
-                    this.SyncContext);
+                this.ImportRemoteLogByDate(this.logReader.GetLogByDateAsync(firstDate ?? this.SelectedLogDate, lastDate).Result);
             }
         }
 
@@ -1194,16 +1148,9 @@
         {
             if (this.IsRemoteConnection)
             {
-                Task.Run(this.logReader.GetTechListAsync, this.CancelSqlAsync).ContinueWith(
-                    task =>
-                    {
-                        this.techList = task.Result.Rows.OfType<DataRow>().ToDictionary(
-                            row => row[0].ToString(),
-                            row => Convert.ToDateTime(row[1]));
-                    },
-                    this.CancelSqlAsync,
-                    TaskContinuationOptions.None,
-                    this.SyncContext);
+                this.techList = this.logReader.GetTechListAsync().Result.Rows.OfType<DataRow>().ToDictionary(
+                    row => row[0].ToString(),
+                    row => Convert.ToDateTime(row[1]));
             }
         }
 
@@ -1303,6 +1250,7 @@
             {
                 this.IsRemoteConnection = true;
                 this.RemoteLogName = this.logReader.RemoteLogName;
+                this.StatusText = "Connected to remote log.";
                 this.FullRemoteSync();
             }
             else
@@ -1626,7 +1574,9 @@
             switch (e.PropertyName)
             {
                 case nameof(this.logReader.IsConnected):
-                    this.SetRemoteStatus(this.logReader.IsConnected);
+
+                    // Make sure we're in the UI thread
+                    Application.Current.Dispatcher.Invoke(() => this.SetRemoteStatus(this.logReader.IsConnected));
                     break;
                 case nameof(this.logReader.LastException):
 
